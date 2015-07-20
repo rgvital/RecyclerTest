@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView rv = (RecyclerView)findViewById(R.id.rv);
 
-        GridLayoutManager llm = new GridLayoutManager(this,3);
+        GridLayoutManager llm = new GridLayoutManager(this, 3);
         rv.setLayoutManager(llm);
 
-        RVAdapter adapter = new RVAdapter(animals);
+        RVAdapter adapter = new RVAdapter(animals, this, llm);
         rv.setAdapter(adapter);
 
     }
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), R.drawable.blah, options);
+        BitmapFactory.decodeResource(getResources(), R.drawable.cuteturtle, options);
         int imageHeight = options.outHeight;
         int imageWidth = options.outWidth;
 
@@ -84,13 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(imageHeight > imageWidth) {
             isPortrait = true;
-        } else {
-            isPortrait = false; //landscape
         }
         porOrLan[0] = isPortrait;
 
 
-        BitmapFactory.decodeResource(getResources(), R.drawable.blah, options);
+        BitmapFactory.decodeResource(getResources(), R.drawable.kappa, options);
         imageHeight = options.outHeight;
         imageWidth = options.outWidth;
 
@@ -98,13 +97,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(imageHeight > imageWidth) {
             isPortrait = true;
-        } else {
-            isPortrait = false; //landscape
         }
         porOrLan[1] = isPortrait;
 
 
-        BitmapFactory.decodeResource(getResources(), R.drawable.blah, options);
+        BitmapFactory.decodeResource(getResources(), R.drawable.richelle, options);
         imageHeight = options.outHeight;
         imageWidth = options.outWidth;
 
@@ -112,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(imageHeight > imageWidth) {
             isPortrait = true;
-        } else {
-            isPortrait = false; //landscape
         }
         porOrLan[2] = isPortrait;
 
@@ -126,15 +121,18 @@ public class MainActivity extends AppCompatActivity {
 
         if(porOrLan[0] == true && porOrLan[1] == true && porOrLan[2] == true) {
              // PPP
+            Log.v("HERE", "PPP");
             Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
             animals.add(new Animal(icon, 1));
 
 
 
         } else if(porOrLan[0] == true && porOrLan[1] == true && porOrLan[2] == false) {
+            Log.v("HERE", "P1L,P2");
             //P1 L
             //P2
         } else if(porOrLan[0] == true && porOrLan[1] == false && porOrLan[2] == false) {
+            Log.v("HERE", "PL,L");
             //PL
             //L
             Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
@@ -146,21 +144,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         } else if(porOrLan[0] == true && porOrLan[1] == false && porOrLan[2] == true) {
+            Log.v("HERE", "PL,P3");
             // PL
             // P3
         } else if(porOrLan[0] == false && porOrLan[1] == false && porOrLan[2] == false) {
+            Log.v("HERE", "LLL");
             //L
             //L
             //L
         } else if(porOrLan[0] == false && porOrLan[1] == false && porOrLan[2] == true) {
+            Log.v("HERE", "L,LP");
             //L
             //LP
         } else if(porOrLan[0] == false && porOrLan[1] == true && porOrLan[2] == false) {
+            Log.v("HERE", "LP,L");
             //LP
             //L
         } else if(porOrLan[0] == false && porOrLan[1] == true && porOrLan[2] == true) {
+            Log.v("HERE", "LP,P3");
             //LP
             //P3
+        } else {
+            Log.v("HERE", "tfisgoingon");
         }
     }
 
