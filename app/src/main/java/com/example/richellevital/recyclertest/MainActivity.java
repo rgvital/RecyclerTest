@@ -1,10 +1,12 @@
 package com.example.richellevital.recyclertest;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,21 +16,33 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<Person> persons;
+    List<Animal> animals;
+    Animal[] posts = new Animal[3];
+    boolean[] porOrLan =  new boolean[3];
+
+    public int height;
+    public int width;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recycler);
+        setContentView(R.layout.cardview);
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        height = displaymetrics.heightPixels;
+        width = displaymetrics.widthPixels;
+
         initializeData();
 
-        RecyclerView rv = (RecyclerView)findViewById(R.id.cardList);
+        RecyclerView rv = (RecyclerView)findViewById(R.id.rv);
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
+        GridLayoutManager llm = new GridLayoutManager(this,3);
         rv.setLayoutManager(llm);
 
-        RVAdapter adapter = new RVAdapter(persons);
+        RVAdapter adapter = new RVAdapter(animals);
         rv.setAdapter(adapter);
+
     }
 
     @Override
@@ -54,16 +68,101 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // This method creates an ArrayList that has three Person objects
+    // This method creates an ArrayList that has three Animal objects
 // Checkout the project associated with this tutorial on Github if
 // you want to use the same images.
     private void initializeData() {
-        this.persons = new ArrayList<>();
-        this.persons.add(new Person("Tina Nguyen", "23 years old", R.drawable.kappa));
-        this.persons.add(new Person("Myra Belle Julom", "25 years old", R.drawable.blah));
-        this.persons.add(new Person("Richelle Vital", "35 years old", R.drawable.richelle));
+        this.animals = new ArrayList<>();
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(getResources(), R.drawable.blah, options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+
+        boolean isPortrait = false;
+
+        if(imageHeight > imageWidth) {
+            isPortrait = true;
+        } else {
+            isPortrait = false; //landscape
+        }
+        porOrLan[0] = isPortrait;
+
+
+        BitmapFactory.decodeResource(getResources(), R.drawable.blah, options);
+        imageHeight = options.outHeight;
+        imageWidth = options.outWidth;
+
+        isPortrait = false;
+
+        if(imageHeight > imageWidth) {
+            isPortrait = true;
+        } else {
+            isPortrait = false; //landscape
+        }
+        porOrLan[1] = isPortrait;
+
+
+        BitmapFactory.decodeResource(getResources(), R.drawable.blah, options);
+        imageHeight = options.outHeight;
+        imageWidth = options.outWidth;
+
+        isPortrait = false;
+
+        if(imageHeight > imageWidth) {
+            isPortrait = true;
+        } else {
+            isPortrait = false; //landscape
+        }
+        porOrLan[2] = isPortrait;
+
+        reorganize();
+
     }
 
+    private void reorganize() {
+        animals = new ArrayList<Animal>();
+
+        if(porOrLan[0] == true && porOrLan[1] == true && porOrLan[2] == true) {
+             // PPP
+            Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
+            animals.add(new Animal(icon, 1));
+
+
+
+        } else if(porOrLan[0] == true && porOrLan[1] == true && porOrLan[2] == false) {
+            //P1 L
+            //P2
+        } else if(porOrLan[0] == true && porOrLan[1] == false && porOrLan[2] == false) {
+            //PL
+            //L
+            Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
+            animals.add(new Animal(icon, 1));
+
+            animals.add(new Animal(BitmapFactory.decodeResource(this.getResources(), R.drawable.kappa), 2));
+
+            animals.add(new Animal(BitmapFactory.decodeResource(this.getResources(), R.drawable.richelle), 3));
+
+
+        } else if(porOrLan[0] == true && porOrLan[1] == false && porOrLan[2] == true) {
+            // PL
+            // P3
+        } else if(porOrLan[0] == false && porOrLan[1] == false && porOrLan[2] == false) {
+            //L
+            //L
+            //L
+        } else if(porOrLan[0] == false && porOrLan[1] == false && porOrLan[2] == true) {
+            //L
+            //LP
+        } else if(porOrLan[0] == false && porOrLan[1] == true && porOrLan[2] == false) {
+            //LP
+            //L
+        } else if(porOrLan[0] == false && porOrLan[1] == true && porOrLan[2] == true) {
+            //LP
+            //P3
+        }
+    }
 
 
 
