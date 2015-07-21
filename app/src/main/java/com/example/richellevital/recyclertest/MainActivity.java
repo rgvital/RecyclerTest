@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         RVAdapter adapter = new RVAdapter(animals, this, llm);
         rv.setAdapter(adapter);
+        SpacesItemDecoration spaces = new SpacesItemDecoration(10);
+        rv.addItemDecoration(spaces);
 
     }
 
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(porOrLan[0] == true && porOrLan[1] == true && porOrLan[2] == true) {
              // PPP
-            Log.v("HERE", "PPP");
+            Log.v("HERE", "P,P,P");
             Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
             animals.add(new Animal(icon, 1));
 
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             // PL
             // P3
         } else if(porOrLan[0] == false && porOrLan[1] == false && porOrLan[2] == false) {
-            Log.v("HERE", "LLL");
+            Log.v("HERE", "L,L,L");
             //L
             //L
             //L
@@ -164,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
             Log.v("HERE", "LP,P3");
             //LP
             //P3
-        } else {
-            Log.v("HERE", "tfisgoingon");
         }
     }
 

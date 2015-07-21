@@ -1,13 +1,10 @@
 package com.example.richellevital.recyclertest;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -15,12 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,20 +27,23 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
     int heightScreen;
     Context context;
 
-    // Instance varaibles
-    int padding = 1;
+    // Instance variables
+    int padding = 10;
     int padPPP = padding*4;
     int paddingPL = padding*3;
     int paddingL = padding*2;
 
-    int portraitWidth, landscape1Width, landscape2Width;
+    int portraitWidth, portraitHeight, landscape1Width, landscape1Height, landscape2Width, landscape2Height;
+    double portraitScale = 1.3333333333333333;
 
     GridLayoutManager glm;
     int sizeOrient = 1;
-    RVAdapter(List<Animal> animals, Context context, GridLayoutManager glm){
+    RVAdapter(List<Animal> animals, Context context, GridLayoutManager glm) {
+
         this.glm = glm;
         this.animals = animals;
         this.context = context;
+
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -57,8 +54,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
         Log.v("ADAPT", "HeightScreen = " + heightScreen);
         //item in recyclerview
         portraitWidth = (widthScreen - padPPP)/3;
+        portraitHeight = (int) ((widthScreen - padPPP)/3 * portraitScale);
+
         landscape1Width = widthScreen - paddingPL - portraitWidth;
         landscape2Width = widthScreen - paddingL;
+
+        landscape1Height = portraitHeight;
+        landscape2Height = portraitHeight;
+
         Log.v("ADAPT", "PortraitWidth = " + portraitWidth);
         Log.v("ADAPT", "RegLandscapeWidth = " +  landscape1Width);
         Log.v("ADAPT", "BigLandscapeWidth = " + landscape2Width);
@@ -66,16 +69,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
         glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                Log.v("ADAPT", "SIZEORIENT = " + sizeOrient);
-                switch (sizeOrient) {
-                    case 1:
+                Log.v("ADAPT", "SIZEORIENT = " + position);
+                switch (position) {
+                    case 0:
                         return 1;
-                    case 2:
+                    case 1:
                         return 2;
-                    case 3:
+                    case 2:
                         return 3;
                     default:
-                        return 1;
+                        return 0;
                 }
             }
         });
@@ -111,47 +114,47 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
     @Override
     public void onBindViewHolder(AnimalViewHolder animalViewHolder, int i) {
 
-        // There should be a set height for all of this...
-        double scale;
-        int portraitHeight, landscapeHeight;
-
-        Bitmap bitmap = animals.get(i).image;
-
-        int bitmapWidth = animals.get(i).image.getWidth();
-        int bitmapHeight = animals.get(i).image.getHeight();
-
         sizeOrient = animals.get(i).sizeOrient;
 
+        animalViewHolder.photo.requestLayout();
 
-
-        switch(sizeOrient) {
+        switch (sizeOrient) {
             case 1:
 
-                scale = ((double) portraitWidth)/bitmapWidth;
-                bitmapHeight = (int) (bitmapHeight*scale);
-                bitmapWidth = portraitWidth;
+                animalViewHolder.photo.getLayoutParams().height = portraitHeight;
+                animalViewHolder.photo.getLayoutParams().width = portraitWidth;
+
+                Picasso.with(context)
+                        .load(R.drawable.cuteturtle)
+                        .resize(portraitWidth, portraitHeight)
+                        .centerCrop()
+                        .into(animalViewHolder.photo);
                 break;
 
             case 2:
-                scale = ((double) landscape1Width)/bitmapWidth;
-                bitmapHeight = (int) (bitmapHeight*scale);
-                bitmapWidth = landscape1Width;
 
+                animalViewHolder.photo.getLayoutParams().height = landscape1Height;
+                animalViewHolder.photo.getLayoutParams().width = landscape1Width;
+
+                Picasso.with(context)
+                        .load(R.drawable.kappa)
+                        .resize(landscape1Width, landscape1Height)
+                        .centerCrop()
+                        .into(animalViewHolder.photo);
                 break;
 
             case 3:
+                animalViewHolder.photo.getLayoutParams().height = landscape2Height;
+                animalViewHolder.photo.getLayoutParams().width = landscape2Width;
 
-                scale = ((double) landscape2Width)/bitmapWidth;
-                bitmapHeight = (int) (bitmapHeight*scale);
-                bitmapWidth = landscape2Width;
+                Picasso.with(context)
+                        .load(R.drawable.richelle)
+                        .resize(landscape2Width, landscape2Height)
+                        .centerCrop()
+                        .into(animalViewHolder.photo);
                 break;
 
         }
-
-        Log.v("ADAPT", "bitmapHeight = " +  bitmapHeight);
-        Log.v("ADAPT", "bitmapWidth = " + bitmapWidth);
-
-                animalViewHolder.photo.setImageBitmap(Bitmap.createScaledBitmap(bitmap, bitmapWidth, bitmapHeight, true));
     }
 
     @Override
@@ -160,3 +163,5 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
     }
 
 }
+
+
