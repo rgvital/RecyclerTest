@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     public int height;
     public int width;
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +42,59 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView rv = (RecyclerView)findViewById(R.id.rv);
 
-        GridLayoutManager llm = new GridLayoutManager(this, 3);
-        rv.setLayoutManager(llm);
+        final GridLayoutManager glm = new GridLayoutManager(this, 3);
+        rv.setLayoutManager(glm);
 
-        RVAdapter adapter = new RVAdapter(animals, this, llm);
+        glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                Log.v("ADAPT", "SIZEORIENT = " + animals.get(position).sizeOrient);
+                switch (animals.get(position).sizeOrient) {
+                    case 1:
+                        return 1;
+                    case 2:
+                        return 2;
+                    case 3:
+                        return 3;
+                    default:
+                        return 0;
+                }
+            }
+        });
+
+        RVAdapter adapter = new RVAdapter(animals, this, glm);
         rv.setAdapter(adapter);
-        SpacesItemDecoration spaces = new SpacesItemDecoration(10);
+        SpacesItemDecoration spaces = new SpacesItemDecoration(13, animals);
         rv.addItemDecoration(spaces);
 
+
+        rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                visibleItemCount = glm.getChildCount();
+                totalItemCount = glm.getItemCount();
+                pastVisiblesItems = glm.findFirstVisibleItemPosition();
+
+                if (loading) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        loading = false;
+                        Log.v("...", "Last Item Wow !");
+                    }
+                }
+            }
+        });
+
+
+        rv.addOnItemTouchListener( // and the click is handled
+                new RecyclerClickListener(this, new RecyclerClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // STUB:
+                        // The click on the item must be handled
+                        Toast.makeText(getApplicationContext(), "itemclick: " + position, Toast.LENGTH_SHORT).show();
+
+                    }
+                }));
     }
 
     @Override
@@ -125,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
              // PPP
             Log.v("HERE", "P,P,P");
             Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
-            animals.add(new Animal(icon, 1));
+            animals.add(new Animal(icon, 1, true, true, true));
 
 
 
@@ -138,11 +187,11 @@ public class MainActivity extends AppCompatActivity {
             //PL
             //L
             Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.cuteturtle);
-            animals.add(new Animal(icon, 1));
+            animals.add(new Animal(icon, 1, true, false, true));
 
-            animals.add(new Animal(BitmapFactory.decodeResource(this.getResources(), R.drawable.kappa), 2));
+            animals.add(new Animal(BitmapFactory.decodeResource(this.getResources(), R.drawable.kappa), 2, true, true, true));
 
-            animals.add(new Animal(BitmapFactory.decodeResource(this.getResources(), R.drawable.richelle), 3));
+            animals.add(new Animal(BitmapFactory.decodeResource(this.getResources(), R.drawable.richelle), 3, false, true, true));
 
 
         } else if(porOrLan[0] == true && porOrLan[1] == false && porOrLan[2] == true) {
@@ -167,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
             //LP
             //P3
         }
+
+
     }
 
 

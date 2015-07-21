@@ -14,11 +14,17 @@ class Animal {
     int time;
     int upAws;
     int sizeOrient;
+    boolean right;
+    boolean left;
+    boolean top;
 
-    Animal(Bitmap image, int sizeOrient) {
+    Animal(Bitmap image, int sizeOrient, boolean top, boolean right, boolean left) {
         this.image = image;
         upAws = 0;
         this.sizeOrient = sizeOrient;
+        this.top = top;
+        this.right = right;
+        this.left = left;
     }
 
 

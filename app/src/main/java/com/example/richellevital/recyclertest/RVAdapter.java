@@ -28,7 +28,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
     Context context;
 
     // Instance variables
-    int padding = 10;
+    int padding = 13;
     int padPPP = padding*4;
     int paddingPL = padding*3;
     int paddingL = padding*2;
@@ -37,7 +37,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
     double portraitScale = 1.3333333333333333;
 
     GridLayoutManager glm;
-    int sizeOrient = 1;
+
     RVAdapter(List<Animal> animals, Context context, GridLayoutManager glm) {
 
         this.glm = glm;
@@ -66,22 +66,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
         Log.v("ADAPT", "RegLandscapeWidth = " +  landscape1Width);
         Log.v("ADAPT", "BigLandscapeWidth = " + landscape2Width);
 
-        glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                Log.v("ADAPT", "SIZEORIENT = " + position);
-                switch (position) {
-                    case 0:
-                        return 1;
-                    case 1:
-                        return 2;
-                    case 2:
-                        return 3;
-                    default:
-                        return 0;
-                }
-            }
-        });
 
     }
 
@@ -114,7 +98,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AnimalViewHolder>{
     @Override
     public void onBindViewHolder(AnimalViewHolder animalViewHolder, int i) {
 
-        sizeOrient = animals.get(i).sizeOrient;
+        int sizeOrient = animals.get(i).sizeOrient;
 
         animalViewHolder.photo.requestLayout();
 
